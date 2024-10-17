@@ -1,0 +1,53 @@
+services:
+  # cache-proxy-1:
+  #   build:
+  #     context: ./
+  #     dockerfile: Dockerfile
+  #   container_name: cache-proxy-1
+  #   volumes:
+  #     - ./proxy_cache_servers/cache.proxy.server.conf:/etc/nginx/nginx.conf
+  #   ports:
+  #     - "8081:80"
+  #   restart: always
+  
+  cache-proxy-2:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    container_name: cache-proxy-2
+    environment:
+      S3_BUCKET_NAME: www.my.githubresumebuilder.cloud
+    # volumes:
+    #   - ./proxy_cache_servers/cache.proxy.server1.conf:/etc/nginx/nginx.conf
+    ports:
+      - "8082:80"
+    restart: always
+
+  # cache-proxy-3:
+  #   build:
+  #     context: ./
+  #     dockerfile: Dockerfile
+  #   container_name: cache-proxy-3
+  #   volumes:
+  #     - ./proxy_cache_servers/cache.proxy.server.conf:/etc/nginx/nginx.conf
+  #   ports:
+  #     - "8083:80"
+  #   restart: always
+  
+  # cache-proxy-4:
+  #   build:
+  #     context: ./
+  #     dockerfile: Dockerfile
+  #   container_name: cache-proxy-4
+  #   volumes:
+  #     - ./proxy_cache_servers/cache.proxy.server.conf:/etc/nginx/nginx.conf
+  #   ports:
+  #     - "8084:80"
+  #   restart: always
+
+networks:
+  webnet:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16
