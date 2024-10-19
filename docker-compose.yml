@@ -11,12 +11,13 @@ services:
   #   restart: always
   
   cache-proxy-2:
-    build:
-      context: ./
-      dockerfile: Dockerfile
+    # build:
+    #   context: ./
+    #   dockerfile: Dockerfile
+    image: devmaksdev/nginx-reverse-proxy-cache:amd64
     container_name: cache-proxy-2
     environment:
-      S3_BUCKET_NAME: www.my.githubresumebuilder.cloud
+      S3_BUCKET_NAME: www.my.githubresumebuilder.cloud.s3-website-us-east-1.amazonaws.com
     # volumes:
     #   - ./proxy_cache_servers/cache.proxy.server1.conf:/etc/nginx/nginx.conf
     ports:
