@@ -1,4 +1,5 @@
 services:
+
   # cache-proxy-1:
   #   build:
   #     context: ./
@@ -10,19 +11,14 @@ services:
   #     - "8081:80"
   #   restart: always
   
-  cache-proxy-2:
-    # build:
-    #   context: ./
-    #   dockerfile: Dockerfile
-    image: devmaksdev/nginx-reverse-proxy-cache:amd64
-    container_name: cache-proxy-2
-    environment:
-      S3_BUCKET_NAME: www.my.githubresumebuilder.cloud.s3-website-us-east-1.amazonaws.com
-    # volumes:
-    #   - ./proxy_cache_servers/cache.proxy.server1.conf:/etc/nginx/nginx.conf
-    ports:
-      - "8082:80"
-    restart: always
+  # cache-proxy-2:
+  #   image: devmaksdev/nginx-reverse-proxy-cache:amd64
+  #   container_name: cache-proxy-2
+  #   environment:
+  #     S3_BUCKET_NAME: www.my.githubresumebuilder.cloud.s3-website-us-east-1.amazonaws.com
+  #   ports:
+  #     - "8082:80"
+  #   restart: always
 
   # cache-proxy-3:
   #   build:
@@ -45,6 +41,15 @@ services:
   #   ports:
   #     - "8084:80"
   #   restart: always
+
+  cdn-us:
+    image: devmaksdev/cdn-least-con-lb-image:latest
+    container_name: cdn-us
+    environment:
+      - CACHE_SERVERS=server 3.82.43.28; server 54.177.85.32;
+    ports:
+      - "8085:80"
+    restart: always
 
 networks:
   webnet:

@@ -1,0 +1,14 @@
+# Use the latest Nginx image as a base
+FROM nginx:1.27.0-alpine
+
+# Install gettext for envsubst
+RUN apk add --no-cache gettext
+
+# Copy the NGINX configuration template
+COPY nginx.cdn.balancers.conf /etc/nginx/nginx.conf.template
+
+# Expose port 80
+EXPOSE 80
+
+# Use envsubst to substitute environment variables in nginx.conf at runtime
+CMD ["/bin/sh", "-c", "envsubst \\$CACHE_SERVERS < /etc/nginx/nginx.conf.template > /etc/nginx/nginx.conf && nginx -g 'daemon off;'"]
