@@ -1,59 +1,30 @@
 services:
-
-  # cache-proxy-1:
-  #   build:
-  #     context: ./
-  #     dockerfile: Dockerfile
-  #   container_name: cache-proxy-1
-  #   volumes:
-  #     - ./proxy_cache_servers/cache.proxy.server.conf:/etc/nginx/nginx.conf
-  #   ports:
-  #     - "8081:80"
-  #   restart: always
-  
-  # cache-proxy-2:
-  #   image: devmaksdev/nginx-reverse-proxy-cache:amd64
-  #   container_name: cache-proxy-2
-  #   environment:
-  #     S3_BUCKET_NAME: www.my.githubresumebuilder.cloud.s3-website-us-east-1.amazonaws.com
-  #   ports:
-  #     - "8082:80"
-  #   restart: always
-
-  # cache-proxy-3:
-  #   build:
-  #     context: ./
-  #     dockerfile: Dockerfile
-  #   container_name: cache-proxy-3
-  #   volumes:
-  #     - ./proxy_cache_servers/cache.proxy.server.conf:/etc/nginx/nginx.conf
-  #   ports:
-  #     - "8083:80"
-  #   restart: always
-  
-  # cache-proxy-4:
-  #   build:
-  #     context: ./
-  #     dockerfile: Dockerfile
-  #   container_name: cache-proxy-4
-  #   volumes:
-  #     - ./proxy_cache_servers/cache.proxy.server.conf:/etc/nginx/nginx.conf
-  #   ports:
-  #     - "8084:80"
-  #   restart: always
-
-  cdn-us:
-    image: devmaksdev/cdn-least-con-lb-image:latest
-    container_name: cdn-us
+  cache-proxy-1:
+    image: devmaksdev/nginx-reverse-proxy-cache:amd64
+    container_name: cache-proxy-1
     environment:
-      - CACHE_SERVERS=server 3.82.43.28; server 54.177.85.32;
+      S3_BUCKET_NAME: www.my.githubresumebuilder.cloud.s3-website-us-east-1.amazonaws.com
     ports:
-      - "8085:80"
+      - "8081:80"
     restart: always
-
-networks:
-  webnet:
-    driver: bridge
-    ipam:
-      config:
-        - subnet: 172.20.0.0/16
+  
+  cache-proxy-2:
+    image: devmaksdev/nginx-reverse-proxy-cache:amd64
+    container_name: cache-proxy-2
+    environment:
+      S3_BUCKET_NAME: www.my.githubresumebuilder.cloud.s3-website-us-east-1.amazonaws.com
+    ports:
+      - "8082:80"
+    restart: always
+  
+  cdn-lb:
+    image: devmaksdev/cdn-least-con-lb-image:latest
+    container_name: cdn-lb
+    environment:
+      - CACHE_SERVERS=server cache-proxy-1; server cache-proxy-2;
+    ports:
+      - "80:80"
+    depends_on:
+      - cache-proxy-1
+      - cache-proxy-2
+    restart: always
